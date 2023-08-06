@@ -4,6 +4,7 @@ from .models import Category, Good, Tag
 
 # Register your models here.
 class GoodAdmin(admin.ModelAdmin):
+
     list_display = ['id', 'name','active', 'price', 'country', 'category']
     list_display_links = ['id', 'name']
     search_fields = ['name', 'id']

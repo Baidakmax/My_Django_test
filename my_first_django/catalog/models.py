@@ -3,6 +3,14 @@ from ckeditor.fields import RichTextField
 import uuid
 # Create your models here.
 
+class TimeDateBaseModel:
+    create = models.DateTimeField("Create", auto_now_add=True, null=True, editable=False)
+    update = models.DateTimeField("Update", auto_now=True, null=True, editable=False)
+
+    class Meta:
+        abstract: True
+
+
 class Tag(models.Model):
     name = models.CharField(max_length=40, unique=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
@@ -38,6 +46,7 @@ class Good(models.Model):
         verbose_name = 'Товар'
         verbose_name_plural = 'Товари'
         ordering = ('name',)
+
     def __str__(self):
         return f"{self.name}, ціна: {self.price}"
 
