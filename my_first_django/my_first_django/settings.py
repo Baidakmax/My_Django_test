@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 from datetime import timedelta
 
@@ -35,6 +35,8 @@ INTERNAL_IPS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'jet.dashboard',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
     'user_profile',
     'statistic',
     'crypto_currency',
+    'transaction',
     # 'statistic',
     # 3th app
     'ckeditor',
@@ -54,12 +57,25 @@ INSTALLED_APPS = [
     'binance',
     'rest_framework_simplejwt',
     'django_filters',
+    'djoser',
+    "corsheaders",
+    'crispy_forms',
+    "crispy_bootstrap5",
+    "mptt",
+    'easy_thumbnails',
+    # social oauth
+    'oauth2_provider',
+    'social_django',
+    'drf_social_oauth2',
     "debug_toolbar",
+    "cacheops",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -82,6 +98,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -137,6 +155,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_DIR = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = MEDIA_DIR
+MEDIA_URL = 'media/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -154,6 +177,8 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'drf_social_oauth2.authentication.SocialAuthentication',
     )
 }
 
@@ -161,3 +186,115 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST: 'localhost'
+EMAIL_PORT: 25
+EMAIL_HOST_USER: ''
+EMAIL_HOST_PASSWORD: ''
+EMAIL_USE_TLS: False
+EMAIL_USE_SSL: False
+
+# CORS
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'Access-Control-Allow-Origin',
+    'X-Total-Count',
+    'Access-Control-Expose-Headers',
+    'x-frame-options',
+)
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000",
+    "http://0.0.0.0:3000",
+    "http://localhost:8000",
+    "http://0.0.0.0:8000",
+]
+
+CORS_ORIGIN_REGEX_WHITELIST = [
+    "http://localhost:3000",
+    "http://0.0.0.0:3000",
+    "http://localhost:8000",
+    "http://0.0.0.0:8000",
+]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'drf_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '415610717949-3ic0h28cu3ekf6260g02pjn8puq0ro7j.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+
+# Define SOCIAL_AUTH_GOOGLE_OUTH2_SCOPE to get extra permissions from Google
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googLeapis.com/auth/userinfo.email',
+    'https://www.gooqLeapis.com/auth/userinfo.profile',
+]
+
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+#         "LOCATION": BASE_DIR / 'Cache',
+#     }
+# }
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+#         'LOCATION': 'redis://127.0.0.1:6379/1',
+#     }
+# }
+
+FIXTURE_DIRS = ['fixture']
+
+# CRISPY_TEMPLATE_PACK = 'uni_form'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+JET_DEFAULT_THEME = 'default'
+
+THUMBNAIL_ALIASES = {
+    '': {
+        'avatar': {'size': (100, 100), 'crop': True},
+    },
+}
+
+# CACHEOPS_REDIS = {
+#     'host': 'localhost', # redis-server is on same machine
+#     'port': 6379,        # default redis port
+#     'db': 1,             # SELECT non-default redis database
+#                          # using separate redis db or redis instance
+#                          # is highly recommended
+#
+#     'socket_timeout': 3,   # connection timeout in seconds, optional
+#     'password': 'qaz123WSX',
+#     # optional
+# }
+#
+# CACHEOPS_DEFAULTS = {
+#     'timeout': 60*60
+# }
+# CACHEOPS = {
+#     'catalog.*': {'ops': 'all', 'timeout': 60},
+# }
+
+

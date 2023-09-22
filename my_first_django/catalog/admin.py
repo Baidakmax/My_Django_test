@@ -1,11 +1,13 @@
 from django.contrib import admin
 from .models import Category, Good, Tag
+from mptt.admin import MPTTModelAdmin, DraggableMPTTAdmin
+import admin_thumbnails
 
 
-# Register your models here.
+@admin_thumbnails.thumbnail('image')
 class GoodAdmin(admin.ModelAdmin):
 
-    list_display = ['id', 'name','active', 'price', 'country', 'category']
+    list_display = ['id', 'name','active','image_thumbnail', 'price', 'country', 'category']
     list_display_links = ['id', 'name']
     search_fields = ['name', 'id']
     list_filter = ['price', 'active', 'category']
@@ -21,6 +23,6 @@ class TagAdmin(admin.ModelAdmin):
     inlines = [GoodsAdminInLine]
 
 
-admin.site.register(Category)
+admin.site.register(Category, DraggableMPTTAdmin)
 admin.site.register(Good, GoodAdmin)
 admin.site.register(Tag, TagAdmin)

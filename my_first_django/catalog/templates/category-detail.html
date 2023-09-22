@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %} Category Detail {% endblock %}
+
+{% block content %}
+<div class="container">
+<h1>Category</h1>
+<ul>
+    <li> {{ object.name|safe }}</li>
+    <li> {{ object.description|safe }}</li>
+    <li> {% for good in object.goods.all  %}
+            <li>{{ good.name }}</li>
+            <li>{{ good.description|safe }}</li>
+            <li>{{ good.price }}</li>
+        {% empty %}
+    <li>No Goods yet.</li>
+    {% endfor %}
+<a href='{% url "category_update" object.pk %}'>+ Edit Category</a>
+</ul>
+</div>
+{% endblock %}

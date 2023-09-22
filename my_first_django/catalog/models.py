@@ -1,5 +1,8 @@
 from django.db import models
+from mptt.models import MPTTModel, TreeForeignKey
 from ckeditor.fields import RichTextField
+from easy_thumbnails.fields import ThumbnailerImageField
+
 import uuid
 # Create your models here.
 
@@ -18,15 +21,22 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
-class Category(models.Model):
+class Category(MPTTModel):
     name = models.CharField('name', max_length=20, unique=True)
     description = RichTextField('Description', default='')
     image = models.ImageField(upload_to='image', null=True, blank=True)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+
+    def get_absolute_url(self):
+        return f"/category_detail/{self.pk}/"
 
     class Meta:
         verbose_name = 'Категорія'
         verbose_name_plural = 'Категорії'
         ordering = ('name',)
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
     def __str__(self):
         return self.name
@@ -39,7 +49,7 @@ class Good(models.Model):
     active = models.BooleanField('В наявності', default=False, help_text='показувати чи не показувати товар')
     country = models.CharField('Країна виробник', max_length=25, default="країна")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='goods', default=True)
-    tags = models.ManyToManyField(Tag, related_name='goods_tag', default=True)
+    tags = models.ManyToManyField(Tag, related_name='goods_tag')
     image = models.ImageField(upload_to='image', null=True, blank=True)
 
     class Meta:

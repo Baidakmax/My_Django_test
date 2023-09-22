@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Category Update {% endblock %}
+
+{% block content %}
+<div class="container">
+<form method="post">{% csrf_token %}
+    <p>Are you sure you want to delete "{{ object }}"?</p>
+    {{ form|crispy }}
+    <input type="submit" value="Delete" class="btn btn-primary">
+</form>
+<div/>
+{% endblock %}

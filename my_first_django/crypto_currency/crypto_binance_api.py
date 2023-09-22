@@ -20,14 +20,40 @@ def currency_crypto():
         now = datetime.now()
         dict_cur[item] = [round(float(price), 3), now.strftime("%Y-%m-%d %H:%M:%S")]
 
-
     return dict_cur
 
-print(currency_crypto())
+
+coin_list = []
+date_list = []
+price_list = []
 dict_of_coins = currency_crypto()
+for key, value in dict_of_coins.items():
+    coin_list.append(key)
+    price_list.append(value[0])
+    date_list.append(value[1])
+dict_of_all_coins = {}
+dict_of_all_coins["coins"] = coin_list
+dict_of_all_coins['price'] = price_list
+dict_of_all_coins['date'] = date_list
 
 
-df = pd.DataFrame(dict_of_coins)
+
+
+
+
+
+
+
+
+
+
+
+df = pd.DataFrame(dict_of_all_coins)
+# Transpose the DataFrame to flip the table
+
+
+# Rename the columns of the transposed DataFrame
+# df_flipped.columns = ['Coin', 'Date', "Price"]
 file_path = 'coins_crypto.xlsx'
 df.to_excel(file_path, index=False)
 print(f'Data saved to {file_path}')
