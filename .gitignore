@@ -4,3 +4,6 @@
 .Ds_Store
 .idea
 /idea/
+/.gitignore
+/frontend
+/settings.py
