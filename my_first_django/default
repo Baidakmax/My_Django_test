@@ -1,0 +1,14 @@
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    location / {
+        proxy_pass http://localhost:8000;
+    }
+
+    location /static/ {
+        autoindex on;
+        alias /home/my_first_django/static/;
+    }
+}
